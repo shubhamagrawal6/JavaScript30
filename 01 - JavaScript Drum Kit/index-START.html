@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -58,9 +58,29 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function playSound(e){
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if(!audio){
+      return;
+    } //Stop function from running if audio is null
+    audio.currentTime = 0; //Rewind audio to start
+    audio.play(); //Play the audio file
+    key.classList.add('playing'); //Start transition
+  }
 
+  function removeTransition(e){
+    if(e.propertyName == 'transform'){
+      return;
+    } //To only check for transform events
+    this.classList.remove('playing'); //End transition
+  }
+  
+  window.addEventListener('keydown', playSound); //Listens to keypress and starts audio and transition
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); //Ends the transition
 </script>
 
-
 </body>
+
 </html>
